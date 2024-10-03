@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const tempMovieData = [
   {
@@ -51,22 +51,9 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-const KEY = "b7dcacfb";
-
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
-
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const response = await fetch(
-        `http://www.omdbapi.com/?apikey=${KEY}&s=star_wars`
-      );
-      const data = await response.json();
-      setMovies(data.Search);
-    };
-    fetchMovies();
-  }, []);
 
   return (
     <>
