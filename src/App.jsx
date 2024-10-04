@@ -98,6 +98,7 @@ export default function App() {
     }
 
     fetchMovies();
+    document.title = "usePopcorn🍿";
   }, [query]);
 
   function handleQuery(value) {
