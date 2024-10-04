@@ -70,12 +70,16 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function fetchMovies() {
       try {
         setIsLoading(true);
         setError("");
 
-        const response = await fetch(`${BASE_URL}?apikey=${KEY}&s=${query}`);
+        const response = await fetch(`${BASE_URL}?apikey=${KEY}&s=${query}`, {
+          signal: controller.signal,
+        });
 
         if (!response.ok) {
           throw new Error("Something went wrong with fetching movies");
@@ -86,7 +90,7 @@ export default function App() {
 
         setMovies(data.Search);
       } catch (error) {
-        setError(error.message);
+        if (error.name !== "AbortError") setError(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -99,6 +103,10 @@ export default function App() {
 
     fetchMovies();
     document.title = "usePopcorn🍿";
+
+    return function () {
+      controller.abort();
+    };
   }, [query]);
 
   function handleQuery(value) {
