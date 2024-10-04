@@ -69,6 +69,28 @@ export default function App() {
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
+  function handleQuery(value) {
+    setQuery(value);
+  }
+
+  function handleSelectMovie(id) {
+    setSelectedId((currentId) => (currentId === id ? null : id));
+  }
+
+  function handleCloseDetails() {
+    setSelectedId(null);
+  }
+
+  function handleAddWatched(movie) {
+    setWatched((prevWatched) => [...prevWatched, movie]);
+  }
+
+  function handleDeleteWatched(id) {
+    setWatched((prevWatched) =>
+      prevWatched.filter((movie) => movie.imdbID !== id)
+    );
+  }
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -100,7 +122,7 @@ export default function App() {
       setError("");
       return;
     }
-
+    handleCloseDetails();
     fetchMovies();
     document.title = "usePopcorn🍿";
 
@@ -108,28 +130,6 @@ export default function App() {
       controller.abort();
     };
   }, [query]);
-
-  function handleQuery(value) {
-    setQuery(value);
-  }
-
-  function handleSelectMovie(id) {
-    setSelectedId((currentId) => (currentId === id ? null : id));
-  }
-
-  function handleCloseDetails() {
-    setSelectedId(null);
-  }
-
-  function handleAddWatched(movie) {
-    setWatched((prevWatched) => [...prevWatched, movie]);
-  }
-
-  function handleDeleteWatched(id) {
-    setWatched((prevWatched) =>
-      prevWatched.filter((movie) => movie.imdbID !== id)
-    );
-  }
 
   return (
     <>

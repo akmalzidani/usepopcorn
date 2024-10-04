@@ -53,6 +53,20 @@ export default function MovieDetails({
     setUserRating(rating);
   }
 
+  useEffect(() => {
+    function handleEsc(e) {
+      if (e.key === "Escape") {
+        onCloseDetails();
+      }
+    }
+
+    document.addEventListener("keydown", handleEsc);
+
+    return function () {
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [onCloseDetails]);
+
   useEffect(
     function () {
       async function getMovieDetails() {
