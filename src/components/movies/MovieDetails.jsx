@@ -10,9 +10,16 @@ export default function MovieDetails({
   selectedId,
   onCloseDetails,
   onAddWatched,
+  watched,
 }) {
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
+
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(watchedUserRating ?? 0);
 
   const {
     Title: title,
@@ -26,6 +33,25 @@ export default function MovieDetails({
     Plot: plot,
     Genre: genre,
   } = movie;
+
+  function handleAdd() {
+    const newWatchedMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ")[0]),
+      userRating,
+    };
+
+    onAddWatched(newWatchedMovie);
+    onCloseDetails();
+  }
+
+  function handleUserRating(rating) {
+    setUserRating(rating);
+  }
 
   useEffect(
     function () {
@@ -68,7 +94,18 @@ export default function MovieDetails({
           </header>
           <section>
             <div className="rating">
-              <StarRating size={24} />
+              {!isWatched ? (
+                <>
+                  <StarRating size={24} onSetRating={handleUserRating} />
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={handleAdd}>
+                      + Add to List
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>You already rated it with {watchedUserRating} ⭐</p>
+              )}
             </div>
             <p>
               <em>{plot}</em>
