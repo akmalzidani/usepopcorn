@@ -63,7 +63,11 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  // const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(() => {
+    const savedWatched = localStorage.getItem("watched");
+    return JSON.parse(savedWatched);
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("star wars");
   const [error, setError] = useState("");
@@ -83,6 +87,8 @@ export default function App() {
 
   function handleAddWatched(movie) {
     setWatched((prevWatched) => [...prevWatched, movie]);
+
+    // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   }
 
   function handleDeleteWatched(id) {
@@ -90,6 +96,10 @@ export default function App() {
       prevWatched.filter((movie) => movie.imdbID !== id)
     );
   }
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   useEffect(() => {
     const controller = new AbortController();
