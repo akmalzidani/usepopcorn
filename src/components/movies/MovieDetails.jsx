@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Loader from "../Loader";
 import StarRating from "../StarRating";
+import { useKey } from "../../hooks/useKey";
 
 const KEY = import.meta.env.VITE_OMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -53,19 +54,7 @@ export default function MovieDetails({
     setUserRating(rating);
   }
 
-  useEffect(() => {
-    function handleEsc(e) {
-      if (e.key === "Escape") {
-        onCloseDetails();
-      }
-    }
-
-    document.addEventListener("keydown", handleEsc);
-
-    return function () {
-      document.removeEventListener("keydown", handleEsc);
-    };
-  }, [onCloseDetails]);
+  useKey("Escape", onCloseDetails);
 
   useEffect(
     function () {
